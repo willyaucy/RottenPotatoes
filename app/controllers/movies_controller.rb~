@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
 
   def index
     redirect = false
-    if !params.include?('sort_by') and session.include?('sort_by')
+    if !params.include?('sort_by')
         params['sort_by'] = session['sort_by']
         redirect = true
     end
@@ -29,11 +29,11 @@ class MoviesController < ApplicationController
         redirect = true
     end
     @ratings = params['ratings']
-    if redirect
-        redirect_to :sort_by => sort_by, :ratings => @ratings
-    end
     if @ratings == nil
         @ratings = {'G' => 1,'PG' => 1,'PG-13' => 1,'R' => 1, "NC-17" => 1}
+    end
+    if redirect
+        redirect_to :sort_by => sort_by, :ratings => @ratings
     end
     @movies = Movie.find(:all, :order => order, :conditions => ["rating in (?)", @ratings.keys])
         
